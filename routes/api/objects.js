@@ -12,10 +12,10 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => 
 {
     //use a for loop might be more elegant and DRY
-    const found = testObjForAPI.some(object => object.id === parseInt(req.params.id));
+    const found = testObjsForAPI.some(object => object.id === parseInt(req.params.id));
     if (found)
     {
-        res.send(testObjForAPI.filter(object => object.id === parseInt(req.params.id)));
+        res.send(testObjsForAPI.filter(object => object.id === parseInt(req.params.id)));
     }
     else
     {
@@ -49,5 +49,30 @@ router.post("/", (req, res) =>
     testObjsForAPI.push(newObject);
     res.json(testObjsForAPI);
 });
+
+//Update Member
+//This is only for this tutorial, for a real database, the code will be different; this is only for the core concept.
+router.put('/:id', (req, res) => {
+    const updateObject = req.body;
+    let found;
+    testObjsForAPI.forEach(obj => 
+    {
+        if (obj.id === parseInt(req.params.id))
+        {
+            obj.name = updateObject.name? updateObject.name: obj.name;
+            obj.email = updateObject.email? updateObject.email: obj.email;
+            res.json({ msg: 'Object updated', obj});
+            found = true;
+        }
+    });
+  
+    if (!found)
+    {
+        return res.status(400).json({msg: "Update failed"});
+    } 
+})
+
+
+//DELETE request is ez, just think
 
 module.exports = router;
